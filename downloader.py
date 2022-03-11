@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup as BS
-from pytube import YouTube, Playlist, Search
+from pytube import Search
 
 source = ('https://open.spotify.com/playlist/1z6axQOw8P27J7ysXtflql')
 
