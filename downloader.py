@@ -11,11 +11,7 @@ soup = BS(site, 'html.parser')
 lista = soup.find_all(class_="eWYxOj")
 
 for i in lista:
-    print(i.string)
+    s = Search(f"Music {i.string} {i.find_next('a').string}")
 
-# print(soup.prettify())
-
-# s = Search('Pump It')
-
-# stream = s.results[0].streams.get_by_itag(251)
-# stream.download()
+    stream = s.results[0].streams.get_by_itag(251)
+    stream.download()
