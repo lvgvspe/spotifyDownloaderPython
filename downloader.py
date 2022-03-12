@@ -1,17 +1,27 @@
 import requests
 from bs4 import BeautifulSoup as BS
 from pytube import Search
+import tkinter as tk
 
-source = ('https://open.spotify.com/playlist/1z6axQOw8P27J7ysXtflql')
 
-site = requests.get(source).content
+root = tk.Tk()
+label = tk.Label(text='Digite o link da playlist:')
+label.pack()
+entry = tk.Entry(root)
+entry.pack()
 
-soup = BS(site, 'html.parser')
+def downloader():
+    source = entry.get()
+    site = requests.get(source).content
+    soup = BS(site, 'html.parser')
+    lista = soup.find_all(class_="eWYxOj")
+    for i in lista:
+        s = Search(f"Music {i.string} {i.find_next('a').string}")
+        print(f'Downloading {s.results[0].title}')
+        stream = s.results[0].streams.get_by_itag(251)
+        stream.download(output_path=soup.find(class_='iJkkJW').string)
+    root.destroy()
 
-lista = soup.find_all(class_="eWYxOj")
-
-for i in lista:
-    s = Search(f"Music {i.string} {i.find_next('a').string}")
-
-    stream = s.results[0].streams.get_by_itag(251)
-    stream.download()
+button = tk.Button(root, text="Baixar", command=downloader)
+button.pack()
+root.mainloop()
