@@ -10,7 +10,7 @@ import os
 root = tk.Tk()
 root.title('Downloader')
 
-mainframe = ttk.Frame(root, padding="50")
+mainframe = ttk.Frame(root, padding="10")
 mainframe.grid(column=0, row=0)
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
