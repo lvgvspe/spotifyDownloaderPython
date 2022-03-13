@@ -2,4 +2,6 @@ venv/
 output/
 ffmpeg/
 __pycache__/
+dist/
 Instruções.txt
+downloader.spec

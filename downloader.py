@@ -8,6 +8,7 @@ from pydub import AudioSegment
 import os
 from distutils.dir_util import copy_tree
 import threading
+from pytube.exceptions import AgeRestrictedError
 
 
 copy_tree("ffmpeg", "C:/ffmpeg")
@@ -54,20 +55,21 @@ def downloader():
         root.update()
         s = Search(f"Music {i.string} {i.find_next('a').string}")
         writeToLog(f'Baixando {s.results[0].title}')
-        root.update()
-        stream = s.results[0].streams.get_by_itag(251)
-        stream.download(output_path=f"{directory}/{soup.find(class_='iJkkJW').string}")
-        writeToLog(f'Convertendo {stream.default_filename} para MP3')
-        root.update()
-        AudioSegment.from_file(f"{directory}/{soup.find(class_='iJkkJW').string}/{stream.default_filename}").export(f"{directory}/{soup.find(class_='iJkkJW').string}/{stream.default_filename}.mp3", format="mp3")
-        os.remove(f"{directory}/{soup.find(class_='iJkkJW').string}/{stream.default_filename}")
-        writeToLog(f'{s.results[0].title} - Salvo com sucesso')
-        root.update()
+        try:
+            stream = s.results[0].streams.get_by_itag(251)
+        except AgeRestrictedError:
+            print("Video com restrição de idade não foi baixado.")
+            writeToLog("Video com restrição de idade não foi baixado.")
+        else:
+            stream.download(output_path=f"{directory}/{soup.find(class_='iJkkJW').string}")
+            writeToLog(f'Convertendo {stream.default_filename} para MP3')
+            AudioSegment.from_file(f"{directory}/{soup.find(class_='iJkkJW').string}/{stream.default_filename}").export(f"{directory}/{soup.find(class_='iJkkJW').string}/{stream.default_filename}.mp3", format="mp3")
+            os.remove(f"{directory}/{soup.find(class_='iJkkJW').string}/{stream.default_filename}")
+            writeToLog(f'{stream.default_filename} - Salvo com sucesso')
     writeToLog('Playlist baixada com sucesso!')
 
 def start():
     threading.Thread(target=downloader).start()
-
 
 ttk.Button(mainframe, text="Escolher pasta", command=folder).grid(column=0, row=3)
 ttk.Button(mainframe, text="Baixar", command=start).grid(column=0, row=4)
