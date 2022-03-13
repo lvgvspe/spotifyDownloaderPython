@@ -1,2 +1,2 @@
 # music
-Music downloader
+Spotify playlist downloader from YouTube (requires ffmpeg)
