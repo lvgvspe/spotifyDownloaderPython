@@ -1,5 +1,0 @@
-1. Copie a pasta "downloader" para o lugar onde quer salvar as músicas;
-2. Dentro da pasta "downloader", clique com o botão direito no arquivo "ffmpeg" e clique em "Executar como administrador";
-3. Abra o arquivo "downloader.exe";
-4. Cole o link da playlist do spotify, e clique em baixar.
-5. Aguarde
