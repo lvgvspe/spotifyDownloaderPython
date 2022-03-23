@@ -10,10 +10,9 @@ from distutils.dir_util import copy_tree
 import threading
 from pytube.exceptions import AgeRestrictedError
 
-
-copy_tree("ffmpeg", "C:/ffmpeg")
-
-os.system('cmd /c setx /m PATH "C:\\ffmpeg\\bin;%PATH%"')
+if not os.path.exists("C:/ffmpeg/bin"):
+    copy_tree("ffmpeg", "C:/ffmpeg")
+    os.system('cmd /c setx /m PATH "C:\\ffmpeg\\bin;%PATH%"')
 
 root = tk.Tk()
 root.title('Downloader')
