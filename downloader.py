@@ -28,7 +28,7 @@ entry = ttk.Entry(mainframe)
 entry.grid(column=0, row=1)
 
 log = tk.Text(mainframe, width=80, height=24, wrap='none')
-log.grid(column=0, row=5)
+log.grid(column=0, row=6)
 
 def writeToLog(msg):
     numlines = int(log.index('end - 1 line').split('.')[0])
@@ -51,10 +51,14 @@ def downloader():
     site = requests.get(source).content
     soup = BS(site, 'html.parser')
     lista = soup.find_all(class_="eWYxOj")
+    pb1 = ttk.Progressbar(mainframe, orient='horizontal', length=500, mode='determinate')
+    pb1.grid(column=0, row=5)
+    mainframe.update
     for i in lista:
         root.update()
         s = Search(f"Music {i.string} {i.find_next('a').string}")
         writeToLog(f'Baixando {s.results[0].title}')
+        pb1['value'] += 100 / len(lista)
         try:
             stream = s.results[0].streams.get_by_itag(251)
         except AgeRestrictedError:
