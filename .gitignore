@@ -3,5 +3,6 @@ output/
 ffmpeg/
 __pycache__/
 dist/
+build/
 Instruções.txt
 downloader.spec
