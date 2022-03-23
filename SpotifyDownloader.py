@@ -50,12 +50,13 @@ def downloader():
     site = requests.get(source).content
     soup = BS(site, 'html.parser')
     lista = soup.find_all(class_="eWYxOj")
-    l = 1
+    length = 0
     pb1 = ttk.Progressbar(mainframe, orient='horizontal', length=500, mode='determinate')
     pb1.grid(column=0, row=6)
     mainframe.update
     for i in lista:
-        ttk.Label(mainframe, text=f"Baixando {l} / {len(lista)}").grid(column=0, row=5)
+        length += 1
+        ttk.Label(mainframe, text=f"Baixando {length} / {len(lista)}").grid(column=0, row=5)
         root.update()
         s = Search(f"Music {i.string} {i.find_next('a').string}")
         writeToLog(f'Baixando {s.results[0].title}')
@@ -72,7 +73,6 @@ def downloader():
             os.remove(f"{directory}/{soup.find(class_='iJkkJW').string}/{stream.default_filename}")
             writeToLog(f'{stream.default_filename} - Salvo com sucesso')
         pb1['value'] += 50 / len(lista)
-        l += 1
     writeToLog('Playlist baixada com sucesso!')
 
 def start():
