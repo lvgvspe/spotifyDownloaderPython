@@ -15,7 +15,7 @@ if not os.path.exists("C:/ffmpeg/bin"):
     os.system('cmd /c setx /m PATH "C:\\ffmpeg\\bin;%PATH%"')
 
 root = tk.Tk()
-root.title('Downloader')
+root.title('Spotify Downloader')
 
 mainframe = ttk.Frame(root, padding="10")
 mainframe.grid(column=0, row=0)
@@ -27,7 +27,7 @@ entry = ttk.Entry(mainframe)
 entry.grid(column=0, row=1)
 
 log = tk.Text(mainframe, width=80, height=24, wrap='none')
-log.grid(column=0, row=6)
+log.grid(column=0, row=7)
 
 def writeToLog(msg):
     numlines = int(log.index('end - 1 line').split('.')[0])
@@ -50,14 +50,16 @@ def downloader():
     site = requests.get(source).content
     soup = BS(site, 'html.parser')
     lista = soup.find_all(class_="eWYxOj")
+    l = 1
     pb1 = ttk.Progressbar(mainframe, orient='horizontal', length=500, mode='determinate')
-    pb1.grid(column=0, row=5)
+    pb1.grid(column=0, row=6)
     mainframe.update
     for i in lista:
+        ttk.Label(mainframe, text=f"Baixando {l} / {len(lista)}").grid(column=0, row=5)
         root.update()
         s = Search(f"Music {i.string} {i.find_next('a').string}")
         writeToLog(f'Baixando {s.results[0].title}')
-        pb1['value'] += 100 / len(lista)
+        pb1['value'] += 50 / len(lista)
         try:
             stream = s.results[0].streams.get_by_itag(251)
         except AgeRestrictedError:
@@ -69,6 +71,8 @@ def downloader():
             AudioSegment.from_file(f"{directory}/{soup.find(class_='iJkkJW').string}/{stream.default_filename}").export(f"{directory}/{soup.find(class_='iJkkJW').string}/{stream.default_filename}.mp3", format="mp3")
             os.remove(f"{directory}/{soup.find(class_='iJkkJW').string}/{stream.default_filename}")
             writeToLog(f'{stream.default_filename} - Salvo com sucesso')
+        pb1['value'] += 50 / len(lista)
+        l += 1
     writeToLog('Playlist baixada com sucesso!')
 
 def start():
